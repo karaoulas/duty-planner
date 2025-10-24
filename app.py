@@ -17,7 +17,7 @@ os.makedirs(instance_path, exist_ok=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(instance_path, "dutyplanner.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'dev-secret-key-change-in-production'
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 # Initialize database
 db.init_app(app)
@@ -36,7 +36,7 @@ def create_tables():
 def inject_now():
     """Make datetime available in all templates."""
     return {
-        'now': datetime.utcnow(),
+        'now': datetime.now(),
         'today': date.today()
     }
 
