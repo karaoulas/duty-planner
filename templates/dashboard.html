@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Duty Planner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">📊 Duty Planner Dashboard</h1>
+
+        <!-- Overview Cards -->
+        <div class="row mb-5">
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Total Soldiers</h5>
+                        <h2 class="card-text fw-bold text-primary">{{ total_soldiers }}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">Today's Date</h5>
+                        <h2 class="card-text fw-bold text-success">{{ today.strftime('%Y-%m-%d') }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Action Cards -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📅 Today's Schedule</h5>
+                        <p class="card-text text-muted">View today's duty assignments</p>
+                        <a href="{{ url_for('schedule', date_str=today.strftime('%Y-%m-%d')) }}" class="btn btn-primary btn-sm">View Schedule</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card border-success shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🔄 Generate Tomorrow's Schedule</h5>
+                        <p class="card-text text-muted">Use fair rotation algorithm</p>
+                        <a href="{{ url_for('generate', date_str=tomorrow.strftime('%Y-%m-%d')) }}" class="btn btn-success btn-sm">Generate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+                <div class="card border-info shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">👥 Manage Soldiers</h5>
+                        <p class="card-text text-muted">Add, edit, or remove soldiers</p>
+                        <a href="{{ url_for('soldiers') }}" class="btn btn-info btn-sm">Go to Soldiers</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card border-warning shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">⚠️ Manage Unavailability</h5>
+                        <p class="card-text text-muted">Mark soldiers as unavailable</p>
+                        <a href="{{ url_for('unavailability') }}" class="btn btn-warning btn-sm">Go to Unavailability</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

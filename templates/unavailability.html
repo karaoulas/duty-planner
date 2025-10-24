@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Unavailability - Duty Planner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <!-- Add Unavailability Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">➕ Add Unavailability</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('unavailability') }}">
+                    <input type="hidden" name="action" value="add">
+
+                    <div class="mb-2">
+                        <label for="soldier_id" class="form-label small">Soldier</label>
+                        <select class="form-control form-control-sm" id="soldier_id" name="soldier_id" required>
+                            <option value="">-- Select Soldier --</option>
+                            {% for soldier in soldiers %}
+                                <option value="{{ soldier.id }}">{{ soldier.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="date" class="form-label small">Date</label>
+                        <input type="date" class="form-control form-control-sm" id="date" name="date" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="reason" class="form-label small">Reason</label>
+                        <select class="form-control form-control-sm" id="reason" name="reason" required>
+                            <option value="">-- Select Reason --</option>
+                            <option value="Άδεια">Άδεια (Leave)</option>
+                            <option value="Υγεία">Υγεία (Illness)</option>
+                            <option value="Άδεια υπογόμωση">Άδεια υπογόμωση (Weekend Leave)</option>
+                            <option value="Ειδική Αποστολή">Ειδική Αποστολή (Special Assignment)</option>
+                            <option value="Εκπαίδευση">Εκπαίδευση (Training)</option>
+                            <option value="Άλλο">Άλλο (Other)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning btn-sm w-100">Add Unavailability</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h1 class="mb-4">⚠️ Soldier Unavailability</h1>
+
+        {% if records %}
+            <div class="table-responsive">
+                <table class="table table-hover table-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th>
+                            <th>Soldier Name</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                            <tr>
+                                <td><strong>{{ record.date.strftime('%Y-%m-%d') }}</strong></td>
+                                <td>{{ record.soldier.name }}</td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">{{ record.reason }}</span>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('unavailability') }}" style="display: inline;">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="unavail_id" value="{{ record.id }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this unavailability record?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No unavailability records for today and beyond.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

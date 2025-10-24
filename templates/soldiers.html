@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Soldiers - Duty Planner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <!-- Add New Soldier Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">➕ Add New Soldier</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('soldiers') }}">
+                    <div class="mb-2">
+                        <label for="name" class="form-label small">Name</label>
+                        <input type="text" class="form-control form-control-sm" id="name" name="name" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="rank" class="form-label small">Rank</label>
+                        <input type="text" class="form-control form-control-sm" id="rank" name="rank" placeholder="e.g., Στρατιώτης">
+                    </div>
+                    <div class="mb-2">
+                        <label for="role" class="form-label small">Role</label>
+                        <select class="form-control form-control-sm" id="role" name="role" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="Σκοπιά">Σκοπιά</option>
+                            <option value="Θαλαμοφύλακας">Θαλαμοφύλακας</option>
+                            <option value="Κουζίνα">Κουζίνα</option>
+                            <option value="Σκοπιά, Θαλαμοφύλακας">Σκοπιά, Θαλαμοφύλακας</option>
+                            <option value="Σκοπιά, Κουζίνα">Σκοπιά, Κουζίνα</option>
+                            <option value="Όλες">Όλες</option>
+                        </select>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="is_available" name="is_available" checked>
+                        <label class="form-check-label small" for="is_available">
+                            Generally Available
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100">Add Soldier</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <h1 class="mb-4">👥 Soldiers</h1>
+
+        {% if soldiers %}
+            <div class="table-responsive">
+                <table class="table table-hover table-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Rank</th>
+                            <th>Role</th>
+                            <th>Services</th>
+                            <th>Availability</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for soldier in soldiers %}
+                            <tr>
+                                <td><strong>{{ soldier.name }}</strong></td>
+                                <td>
+                                    {% if soldier.rank %}
+                                        <small>{{ soldier.rank }}</small>
+                                    {% else %}
+                                        <small class="text-muted">—</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ soldier.role }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ soldier.total_services }}</span>
+                                </td>
+                                <td>
+                                    {% if soldier.is_available %}
+                                        <span class="badge bg-success">Available</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Unavailable</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('edit_soldier', soldier_id=soldier.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <form method="POST" action="{{ url_for('delete_soldier', soldier_id=soldier.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this soldier?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No soldiers yet. Add one using the form on the left.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

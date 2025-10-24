@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Soldier - Duty Planner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1 class="mb-4">✏️ Edit Soldier: {{ soldier.name }}</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_soldier', soldier_id=soldier.id) }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" value="{{ soldier.name }}" disabled>
+                        <small class="form-text text-muted">Name cannot be changed.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rank" class="form-label">Rank</label>
+                        <input type="text" class="form-control" id="rank" name="rank" value="{{ soldier.rank or '' }}" placeholder="e.g., Στρατιώτης">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="Σκοπιά" {% if soldier.role == 'Σκοπιά' %}selected{% endif %}>Σκοπιά</option>
+                            <option value="Θαλαμοφύλακας" {% if soldier.role == 'Θαλαμοφύλακας' %}selected{% endif %}>Θαλαμοφύλακας</option>
+                            <option value="Κουζίνα" {% if soldier.role == 'Κουζίνα' %}selected{% endif %}>Κουζίνα</option>
+                            <option value="Σκοπιά, Θαλαμοφύλακας" {% if soldier.role == 'Σκοπιά, Θαλαμοφύλακας' %}selected{% endif %}>Σκοπιά, Θαλαμοφύλακας</option>
+                            <option value="Σκοπιά, Κουζίνα" {% if soldier.role == 'Σκοπιά, Κουζίνα' %}selected{% endif %}>Σκοπιά, Κουζίνα</option>
+                            <option value="Όλες" {% if soldier.role == 'Όλες' %}selected{% endif %}>Όλες</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_available" name="is_available" {% if soldier.is_available %}checked{% endif %}>
+                            <label class="form-check-label" for="is_available">
+                                Generally Available
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Total Services</label>
+                        <input type="text" class="form-control" value="{{ soldier.total_services }}" disabled>
+                        <small class="form-text text-muted">Auto-tracked. Updated when duties are assigned.</small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{{ url_for('soldiers') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
